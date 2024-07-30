@@ -6,9 +6,16 @@ import { AddressModule } from './address/address.module';
 import { CustomerModule } from './customer/customer.module';
 import { ServiceResolver } from './service/service.resolver';
 import { ServiceModule } from './service/service.module';
+import { VisaApplicationModule } from './visa-application/visa-application.module';
 
 @Module({
-  imports: [DatabaseModule, AddressModule, CustomerModule, ServiceModule],
+  imports: [
+    DatabaseModule,
+    AddressModule,
+    CustomerModule,
+    ServiceModule,
+    VisaApplicationModule,
+  ],
   controllers: [AppController],
   providers: [AppService, ServiceResolver],
 })
