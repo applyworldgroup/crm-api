@@ -91,10 +91,20 @@ export class CustomerService {
   }
 
   async remove(id: string) {
-    const customer = await this.databaseService.customer.delete({
+    const customerWithAddress = await this.databaseService.customer.delete({
       where: { id },
     });
 
-    return customer;
+    if (customerWithAddress.addressId) {
+      const customerCount = await this.databaseService.customer.count({
+        where: { addressId: customerWithAddress.addressId },
+      });
+
+      if (customerCount === 0) {
+        await this.addressService.remove(customerWithAddress.addressId);
+      }
+    }
+
+    return customerWithAddress;
   }
 }

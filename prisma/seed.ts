@@ -3,6 +3,8 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
+  await prisma.customer.deleteMany();
+  await prisma.address.deleteMany();
   // Create Addresses
   const address1 = await prisma.address.create({
     data: {
