@@ -29,22 +29,25 @@ export class CustomerService {
     }
 
     // Use AddressService to create the address first
-    const createdAddress = await this.addressService.create(address);
+    let createdAddress;
+    if (address) {
+      createdAddress = await this.addressService.create(address);
+    }
     try {
       const customer = await this.databaseService.customer.create({
         data: {
           ...customerData,
           dateOfBirth: formattedDateOfBirth,
-          address: {
-            connect: { id: createdAddress.id },
-          },
+          address: createdAddress
+            ? { connect: { id: createdAddress.id } }
+            : undefined,
         },
         include: { address: true },
       });
 
       return customer;
     } catch (error) {
-      throw new Error();
+      throw new Error(error);
     }
   }
 

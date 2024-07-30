@@ -28,8 +28,8 @@ model Customer {
   email          String    @unique
   passportNumber String    @unique
   nationality    String
-  address        Address?  @relation(fields: [addressId], references: [id], onDelete: Cascade) // problem here ....
-  addressId      String?
+  addressId      String?  
+  Address        Address?  @relation(fields: [addressId], references: [id], onDelete: SetNull) // problem here ....
   services       Service[]
 }
 
