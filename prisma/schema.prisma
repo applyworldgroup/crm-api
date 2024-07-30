@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Address {
+  id          String     @id @default(uuid())
+  unit        String?
+  streetLine1 String
+  streetLine2 String?
+  suburb      String
+  postalCode  String
+  city        String
+  country     String
+  customers   Customer[]
+}
+
+model Customer {
+  id             String    @id @default(uuid())
+  firstName      String
+  lastName       String
+  dateOfBirth    DateTime
+  phoneNumber    String    @unique
+  email          String    @unique
+  passportNumber String    @unique
+  nationality    String
+  address        Address?  @relation(fields: [addressId], references: [id], onDelete: Cascade) // problem here ....
+  addressId      String?
+  services       Service[]
+}
+
+model Service {
+  id               String             @id @default(uuid())
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  customer         Customer           @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customerId       String
+  VisaApplication  VisaApplication[]
+  SkillsAssessment SkillsAssessment[]
+  JobReadyProgram  JobReadyProgram[]
+}
+
+model VisaApplication {
+  id              String   @id @default(uuid())
+  visaType        String
+  applicationDate DateTime
+  status          String
+  serviceId       String
+  service         Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+}
+
+model SkillsAssessment {
+  id             String   @id @default(uuid())
+  assessmentType String
+  assessmentDate DateTime
+  result         String
+  serviceId      String
+  service        Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+}
+
+model JobReadyProgram {
+  id             String   @id @default(uuid())
+  programType    String
+  startDate      DateTime
+  completionDate DateTime
+  serviceId      String
+  service        Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+}
